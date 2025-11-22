@@ -11,29 +11,32 @@ dotenv.config();
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Routes
 app.use('/api/chat', chatRoutes);
 app.use('/api/analytics', analyticsRoutes);
 
+// Health Check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Voice Bot API is running' });
 });
 
+// Error Handling
 app.use(errorHandler);
 
-const startServer = async (): Promise<void> => {
-  try {
-    await connectDB();
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
-  }
-};
+// Connect to Database
+connectDB();
 
-startServer();
+// Export the Express API for Vercel
+export default app;
+
+// Only start the server listening if we are NOT in production (Vercel handles this automatically)
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
