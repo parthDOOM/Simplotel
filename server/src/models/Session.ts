@@ -12,7 +12,8 @@ export interface ISession extends Document {
 }
 
 const sessionSchema = new Schema<ISession>({
-  _id: { type: String, required: true },
+  // Cast to 'any' to bypass Mongoose's strict ObjectId check for _id
+  _id: { type: String, required: true } as any,
   userId: { type: String, required: true },
   startTime: { type: Date, default: Date.now },
   lastActive: { type: Date, default: Date.now },
