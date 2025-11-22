@@ -1,8 +1,12 @@
 # Intelligent Voice Bot
 
-> A sophisticated voice-first conversational interface AI-powered responses.
+> A sophisticated voice-first conversational interface with AI-powered responses.
 
 ![License](https://img.shields.io/badge/license-MIT-blue)
+
+## Live Demo
+
+**Deployed Application:** [https://simplotelchatbot.vercel.app/](https://simplotelchatbot.vercel.app/)
 
 ## Screenshots
 
