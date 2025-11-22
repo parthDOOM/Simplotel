@@ -19,14 +19,16 @@ export const sendMessage = async (
   content: string,
   userId: string,
   deviceType: 'mobile' | 'desktop',
-  browser: string
+  browser: string,
+  language?: string
 ) => {
   const response = await api.post('/chat/message', {
     sessionId,
     content,
     userId,
     deviceType,
-    browser
+    browser,
+    language
   });
   return response.data;
 };

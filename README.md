@@ -1,11 +1,11 @@
-# 🎤 Intelligent Voice Bot
+# Intelligent Voice Bot
 
-> A sophisticated voice-first conversational interface with Swiss Minimalist design and zero recurring costs.
+> A sophisticated voice-first conversational interface AI-powered responses.
 
 ![Status](https://img.shields.io/badge/status-production%20ready-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
-## 📸 Screenshots
+## Screenshots
 
 ### Landing Page
 ![Landing Page](client/public/Landing_Page.png)
@@ -21,16 +21,19 @@
 
 ---
 
-## ✨ Features
+## Features
 
-- 🎤 **Real-time Voice Input** - Browser-native Web Speech API (zero cost)
-- 🤖 **AI Conversations** - Powered by Groq API (Llama 3.3 70B)
-- 🔊 **Natural Speech Output** - Optimized text-to-speech synthesis
-- 😊 **Sentiment Analysis** - Real-time emotion detection with VADER
-- 📈 **Analytics Dashboard** - Session metrics, response times, error tracking
-- 📄 **PDF Export** - Download conversation transcripts
+- **Real-time Voice Input** - Browser-native Web Speech API with multi-language support
+- **AI Conversations** - Powered by Groq API (Llama 3.3 70B)
+- **Natural Speech Output** - Text-to-speech synthesis with language-specific voices
+- **Multi-Language Support** - English, Hindi, Gujarati, Spanish, French, German
+- **Barge-in Capability** - Interrupt the bot while it's speaking naturally
+- **Sentiment Analysis** - Real-time emotion detection with VADER
+- **Analytics Dashboard** - Session metrics, response times, error tracking
+- **PDF Export** - Download conversation transcripts
+- **Dynamic Data Retrieval** - Query session info, user ID, message counts
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Node.js v18+
@@ -73,7 +76,7 @@ GROQ_API_KEY=your_groq_api_key_here
 NODE_ENV=development
 ```
 
-## 🏗️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - **Framework:** React 18 with TypeScript
@@ -81,49 +84,22 @@ NODE_ENV=development
 - **Styling:** Tailwind CSS 3.4
 - **State:** Zustand 4.4
 - **3D Graphics:** Three.js r128
-- **APIs:** Web Speech API, Canvas API, Audio API
+- **APIs:** Web Speech API (Speech Recognition & Synthesis)
 
 ### Backend
 - **Runtime:** Node.js 18+ with Express 4.18
 - **Database:** MongoDB with Mongoose 8.0
-- **AI:** Groq API
-- **Sentiment:** Groq API
-- **Security:** express-rate-limit, Zod validation, CORS
+- **AI:** Groq SDK (Llama 3.3 70B Versatile)
+- **Sentiment:** VADER Sentiment
+- **Validation:** Zod
+- **Security:** express-rate-limit, CORS
 
-## 📁 Project Structure
 
-```
-/project-root
-├── /client                  # React frontend
-│   ├── /src
-│   │   ├── /components
-│   │   │   ├── /core       # Layout, MicButton, AudioVisualizer
-│   │   │   ├── /chat       # ChatContainer, ChatBubble
-│   │   │   ├── /dashboard  # StatCard, SentimentChart
-│   │   │   └── /welcome    # WelcomeScreen, BotVisualizer (3D)
-│   │   ├── /hooks          # useSpeechToText, useTextToSpeech
-│   │   ├── /services       # api.ts (axios)
-│   │   ├── /store          # useStore.ts (zustand)
-│   │   ├── /utils          # pdfExport.ts
-│   │   └── /types          # TypeScript interfaces
-│   └── /public             # Static assets (SVG logos)
-│
-└── /server                  # Express backend
-    ├── /src
-    │   ├── /controllers    # chatController, analyticsController
-    │   ├── /models         # Session.ts, Message.ts (Mongoose)
-    │   ├── /routes         # chatRoutes, analyticsRoutes
-    │   ├── /services       # groqService, sentimentService
-    │   └── /middleware     # errorHandler, rateLimiter
-    └── .env                # Environment variables (gitignored)
-```
-
-## 🌐 API Endpoints
+## API Endpoints
 
 ### Chat
 ```
 POST /api/chat/message              # Send message, get AI response
-POST /api/chat/conversation/new     # Create new session
 GET  /api/chat/conversation/:sessionId  # Get conversation history
 ```
 
@@ -132,31 +108,82 @@ GET  /api/chat/conversation/:sessionId  # Get conversation history
 GET /api/analytics/:sessionId       # Get session metrics
 ```
 
-## 📱 Browser Compatibility
+## Language Support
 
-| Browser | Speech Recognition | Overall Support |
-|---------|-------------------|-----------------|
-| Chrome  | ✅ Full           | ✅ Recommended  |
-| Edge    | ✅ Full           | ✅ Recommended  |
-| Safari  | ⚠️ Limited        | ⚠️ Partial      |
-| Firefox | ❌ Not Supported  | ❌ Not Recommended |
+The application supports 6 languages. Users select their preferred language on the welcome screen before starting a conversation:
 
-*Note: Web Speech API support varies by browser. Chrome/Edge provide the best experience.*
+- **English (en-US)** - Full support
+- **Hindi (hi-IN)** - Full support
+- **Gujarati (gu-IN)** - AI responses in Gujarati (TTS may use fallback voice)
+- **Spanish (es-ES)** - Full support
+- **French (fr-FR)** - Full support
+- **German (de-DE)** - Full support
 
-## 🧪 Testing
+**Note:** Speech synthesis voice availability depends on your operating system and browser. Some languages may use fallback voices if native voices aren't available.
+
+## Browser Compatibility
+
+| Browser | Speech Recognition | Speech Synthesis | Overall Support |
+|---------|-------------------|------------------|-----------------|
+| Chrome  | Full              | Full             | Recommended     |
+| Edge    | Full              | Full             | Recommended     |
+| Safari  | Limited           | Partial          | Partial         |
+| Firefox | Not Supported     | Partial          | Not Recommended |
+
+**Note:** Web Speech API support varies by browser. Chrome and Edge provide the best experience with full support for both speech recognition and synthesis.
+
+## Key Features
+
+### Multi-Language Conversations
+- Select language once at session start
+- AI responds in the selected language
+- Speech recognition transcribes in the selected language
+- Text-to-speech speaks with appropriate accent/voice
+
+### Barge-in Interruption
+- Speak while the bot is talking to interrupt it naturally
+- Microphone stays active during bot speech
+- Automatically stops bot speech when user starts speaking
+
+### Context-Aware AI
+- Backend maintains last 3 conversation exchanges
+- AI remembers conversation thread
+- Natural, coherent multi-turn dialogues
+
+### Sentiment-Reactive UI
+- Real-time VADER sentiment analysis (-1.0 to +1.0)
+- Background color shifts based on user mood
+- Blue tint for positive, amber for negative
+
+### Dynamic Data Queries
+Ask the bot:
+- "What is my user ID?" - Returns session information
+- "Show my account status" - Returns session details, duration, message count
+- "How many messages have I sent?" - Returns message count
+
+### Analytics Dashboard
+- Total Queries count
+- Average Response Time
+- Current Sentiment Score
+- Session Duration
+- Fastest/Slowest Response times
+- Error Rate percentage
+- PDF export of conversation
+
+## Testing
 
 ### Build Tests
 ```powershell
 # Test server build
 cd server
-npm run build    # ✅ Should pass
+npm run build
 
 # Test client build
 cd client
-npm run build    # ✅ Should pass
+npm run build
 ```
 
-## 🚀 Production Deployment
+## Production Deployment
 
 ### Build for Production
 ```powershell
@@ -177,67 +204,8 @@ npm run build
 - Secure GROQ_API_KEY
 - Enable HTTPS
 - Configure CORS for production domain
+- Whitelist production IPs in MongoDB Atlas
 
-## 💡 Key Features Explained
-
-### Zero-Cost Architecture
-- **Speech Processing:** Browser-native (Web Speech API) - no cloud STT/TTS costs
-- **AI Inference:** Groq API free tier (30 requests/minute)
-- **Database:** MongoDB Atlas free tier (512MB)
-- **Hosting:** Static client can deploy to Vercel/Netlify free tier
-
-### Context-Aware Conversations
-- Backend maintains last 5 messages per session
-- AI remembers conversation thread
-- Natural, coherent multi-turn dialogues
-
-### Sentiment-Reactive UI
-- Real-time VADER sentiment analysis (-1.0 to +1.0)
-- 3D bot changes color: Blue (happy), Orange (neutral), Red (angry)
-- Chat bubbles use gradient colors based on sentiment
-- Background subtly shifts based on user mood
-
-### Analytics Dashboard
-- **Total Queries:** Count of user messages
-- **Average Response Time:** AI latency tracking
-- **Sentiment Score:** Current conversation mood
-- **Session Duration:** Time since session start
-- **Fastest/Slowest Response:** Performance metrics
-- **Error Rate:** Percentage of failed requests
-- **Query Count:** Messages per session
-
-## 🐛 Troubleshooting
-
-### Microphone Not Working
-- Check browser permissions (chrome://settings/content/microphone)
-- Use HTTPS or localhost (required for Web Speech API)
-- Try Chrome/Edge instead of Firefox/Safari
-
-### AI Not Responding
-- Verify `GROQ_API_KEY` in server/.env
-- Check server console for error messages
-- Ensure rate limit not exceeded (30 req/min)
-
-### MongoDB Connection Failed
-- Check `MONGODB_URI` in server/.env
-- Ensure MongoDB is running locally OR
-- Verify Atlas cluster whitelist (0.0.0.0/0 for testing)
-
-### Build Errors
-- Delete node_modules and package-lock.json
-- Run `npm install` again
-- Ensure Node.js v18+
-
-## 🎯 Future Enhancements
-
-- [ ] Voice activity detection (auto start/stop)
-- [ ] Multi-language support
-- [ ] User authentication
-- [ ] Conversation history persistence
-- [ ] Custom AI model training
-- [ ] WebSocket for real-time updates
-- [ ] Progressive Web App (PWA)
-
-## 📝 License
+## License
 
 MIT License - Free to use, modify, and distribute

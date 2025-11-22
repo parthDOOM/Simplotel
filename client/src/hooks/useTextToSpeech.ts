@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 
 interface UseTextToSpeechReturn {
-  speak: (text: string) => void;
+  speak: (text: string, language?: string) => void;
   isSpeaking: boolean;
   stop: () => void;
   error: string | null;
@@ -19,15 +19,32 @@ export const useTextToSpeech = (): UseTextToSpeechReturn => {
     }
 
     synthRef.current = window.speechSynthesis;
+    
+    // Load voices (they may not be immediately available)
+    const loadVoices = () => {
+      const voices = synthRef.current?.getVoices() || [];
+      if (voices.length > 0) {
+        console.log('Available voices:', voices.map(v => `${v.name} (${v.lang})`));
+      }
+    };
+    
+    // Load voices immediately
+    loadVoices();
+    
+    // Listen for voices changed event (some browsers need this)
+    if (synthRef.current) {
+      synthRef.current.addEventListener('voiceschanged', loadVoices);
+    }
 
     return () => {
       if (synthRef.current) {
         synthRef.current.cancel();
+        synthRef.current.removeEventListener('voiceschanged', loadVoices);
       }
     };
   }, []);
 
-  const speak = (text: string) => {
+  const speak = (text: string, language: string = 'en-US') => {
     if (!synthRef.current) {
       setError('Speech synthesis not available');
       return;
@@ -38,12 +55,33 @@ export const useTextToSpeech = (): UseTextToSpeechReturn => {
     const utterance = new SpeechSynthesisUtterance(text);
     
     const voices = synthRef.current.getVoices();
-    const preferredVoice = voices.find(
-      (voice: SpeechSynthesisVoice) => voice.name.includes('Google') || voice.name.includes('Microsoft')
-    ) || voices[0];
+    
+    // Extract language code (e.g., 'hi' from 'hi-IN', 'gu' from 'gu-IN')
+    const langCode = language.split('-')[0];
+    
+    // Try to find a voice that matches the language
+    let preferredVoice = voices.find(
+      (voice: SpeechSynthesisVoice) => voice.lang.startsWith(langCode)
+    );
+    
+    // If no voice found for the language, try Google/Microsoft voices
+    if (!preferredVoice) {
+      console.warn(`No ${language} voice found, trying Google/Microsoft voices`);
+      preferredVoice = voices.find(
+        (voice: SpeechSynthesisVoice) => voice.name.includes('Google') || voice.name.includes('Microsoft')
+      );
+    }
+    
+    // Final fallback to first available voice
+    if (!preferredVoice) {
+      console.warn('Using default voice');
+      preferredVoice = voices[0];
+    }
     
     if (preferredVoice) {
       utterance.voice = preferredVoice;
+      utterance.lang = preferredVoice.lang || language;
+      console.log('Using voice:', preferredVoice.name, 'for language:', language);
     }
 
     utterance.rate = 1.05;
@@ -60,6 +98,7 @@ export const useTextToSpeech = (): UseTextToSpeechReturn => {
     };
 
     utterance.onerror = (event) => {
+      console.error('Speech synthesis error:', event.error);
       setError(`Speech synthesis error: ${event.error}`);
       setIsSpeaking(false);
     };

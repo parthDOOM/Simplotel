@@ -9,7 +9,7 @@ interface UseSpeechToTextReturn {
   interimTranscript: string;
 }
 
-export const useSpeechToText = (): UseSpeechToTextReturn => {
+export const useSpeechToText = (language: string = 'en-US'): UseSpeechToTextReturn => {
   const [transcript, setTranscript] = useState('');
   const [interimTranscript, setInterimTranscript] = useState('');
   const [isListening, setIsListening] = useState(false);
@@ -27,7 +27,7 @@ export const useSpeechToText = (): UseSpeechToTextReturn => {
 
     recognition.continuous = true;
     recognition.interimResults = true;
-    recognition.lang = 'en-US';
+    recognition.lang = language;
     recognition.maxAlternatives = 3;
 
     recognition.onstart = () => {
@@ -72,7 +72,7 @@ export const useSpeechToText = (): UseSpeechToTextReturn => {
         recognitionRef.current.abort();
       }
     };
-  }, []);
+  }, [language]);
 
   const startListening = () => {
     if (recognitionRef.current && !isListening) {

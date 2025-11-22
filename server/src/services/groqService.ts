@@ -14,7 +14,7 @@ function getGroqClient(): Groq | null {
   return groq;
 }
 
-export const generateResponse = async (prompt: string, context: string[] = []): Promise<string> => {
+export const generateResponse = async (prompt: string, context: string[] = [], language: string = 'en-US'): Promise<string> => {
   const client = getGroqClient();
   
   if (!client) {
@@ -23,11 +23,23 @@ export const generateResponse = async (prompt: string, context: string[] = []): 
   }
 
   try {
+    // Language-specific system prompts
+    const languagePrompts: Record<string, string> = {
+      'en-US': 'You are a helpful, friendly AI assistant. Keep responses concise, conversational, and informative. Answer questions accurately and be supportive.',
+      'hi-IN': 'You are a helpful AI assistant. Please respond in Hindi. Keep responses concise and conversational.',
+      'gu-IN': 'You are a helpful AI assistant. Please respond in Gujarati. Keep responses concise and conversational.',
+      'es-ES': 'You are a helpful AI assistant. Please respond in Spanish. Keep responses concise and conversational.',
+      'fr-FR': 'You are a helpful AI assistant. Please respond in French. Keep responses concise and conversational.',
+      'de-DE': 'You are a helpful AI assistant. Please respond in German. Keep responses concise and conversational.'
+    };
+
+    const systemPrompt = languagePrompts[language] || languagePrompts['en-US'];
+
     // Build conversation history
     const messages: any[] = [
       {
         role: 'system',
-        content: 'You are a helpful, friendly AI assistant. Keep responses concise, conversational, and informative. Answer questions accurately and be supportive.'
+        content: systemPrompt
       }
     ];
 

@@ -1,5 +1,15 @@
 import React from 'react';
 import { BotVisualizer } from './BotVisualizer';
+import { useStore } from '../../store/useStore';
+
+const languages = [
+  { code: 'en-US', name: 'English', flag: '🇺🇸' },
+  { code: 'hi-IN', name: 'हिन्दी (Hindi)', flag: '🇮🇳' },
+  { code: 'gu-IN', name: 'ગુજરાતી (Gujarati)', flag: '🇮🇳' },
+  { code: 'es-ES', name: 'Español', flag: '🇪🇸' },
+  { code: 'fr-FR', name: 'Français', flag: '🇫🇷' },
+  { code: 'de-DE', name: 'Deutsch', flag: '🇩🇪' }
+];
 
 interface WelcomeScreenProps {
   onStart: () => void;
@@ -7,6 +17,7 @@ interface WelcomeScreenProps {
 
 export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
   const [fadeOut, setFadeOut] = React.useState(false);
+  const { language, setLanguage } = useStore();
 
   const handleStart = () => {
     setFadeOut(true);
@@ -33,6 +44,24 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
           <p className="text-xl text-gray-600 font-light">
             Your AI companion
           </p>
+          
+          {/* Language Selection */}
+          <div className="mt-8 flex flex-col items-center gap-3">
+            <label className="text-sm font-medium text-gray-700">
+              Choose your language:
+            </label>
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="px-6 py-3 bg-white border-2 border-gray-300 rounded-xl text-base font-medium text-gray-700 hover:border-intl-orange focus:outline-none focus:ring-2 focus:ring-intl-orange focus:border-transparent transition-all cursor-pointer shadow-sm"
+            >
+              {languages.map((lang) => (
+                <option key={lang.code} value={lang.code}>
+                  {lang.flag} {lang.name}
+                </option>
+              ))}
+            </select>
+          </div>
           
           <button
             onClick={handleStart}

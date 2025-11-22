@@ -19,6 +19,7 @@ const App = () => {
     audioState,
     sentimentScore,
     showWelcome,
+    language,
     setAudioState,
     addMessage,
     replaceMessage,
@@ -36,11 +37,12 @@ const App = () => {
     stopListening,
     interimTranscript,
     error: speechError
-  } = useSpeechToText();
+  } = useSpeechToText(language);
 
-  const { speak, isSpeaking } = useTextToSpeech();
+  const { speak, isSpeaking, stop: stopSpeaking } = useTextToSpeech();
 
   const [showDashboard, setShowDashboard] = useState(false);
+  const [wasListeningBeforeSpeaking, setWasListeningBeforeSpeaking] = useState(false);
 
   // Handle browser back button
   useEffect(() => {
@@ -77,15 +79,37 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transcript]);
 
+  // Barge-in: Allow user to interrupt the bot while it's speaking
+  useEffect(() => {
+    if (isSpeaking && isListening && interimTranscript.trim().length > 0) {
+      stopSpeaking(); // Immediately stop bot when user starts talking
+      setWasListeningBeforeSpeaking(true); // Keep listening flag
+    }
+  }, [interimTranscript, isSpeaking, isListening, stopSpeaking]);
+
   useEffect(() => {
     if (isSpeaking) {
-      setAudioState('speaking');
-    } else if (isListening) {
-      setAudioState('listening');
-    } else if (audioState === 'speaking' || audioState === 'listening') {
-      setAudioState('idle');
+      // Don't stop listening - allow barge-in
+      if (audioState !== 'speaking') {
+        setAudioState('speaking');
+      }
+    } else {
+      // AI finished speaking
+      if (wasListeningBeforeSpeaking && !isListening) {
+        // Automatically restart listening after AI finishes (if not already listening)
+        setWasListeningBeforeSpeaking(false);
+        setTimeout(() => {
+          startListening();
+        }, 500);
+      } else if (isListening) {
+        if (audioState !== 'listening') {
+          setAudioState('listening');
+        }
+      } else if (audioState === 'speaking' || audioState === 'listening') {
+        setAudioState('idle');
+      }
     }
-  }, [isListening, isSpeaking]);
+  }, [isListening, isSpeaking, audioState, startListening, wasListeningBeforeSpeaking]);
 
   const handleUserMessage = async (content: string) => {
     setAudioState('processing');
@@ -106,7 +130,7 @@ const App = () => {
       const deviceType = window.innerWidth < 768 ? 'mobile' : 'desktop';
       const browser = navigator.userAgent;
 
-      const response = await sendMessage(sessionId, content, 'anonymous', deviceType, browser);
+      const response = await sendMessage(sessionId, content, 'anonymous', deviceType, browser, language);
 
       if (response.success) {
         // Replace temp message with actual message from server
@@ -114,7 +138,7 @@ const App = () => {
         addMessage(response.data.botMessage);
         setSentimentScore(response.data.sentimentScore);
 
-        speak(response.data.botMessage.content);
+        speak(response.data.botMessage.content, language);
 
         fetchAnalytics();
       }

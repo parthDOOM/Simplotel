@@ -1,7 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface ISession extends Document {
-  _id: string;
   userId: string;
   startTime: Date;
   lastActive: Date;

@@ -1,10 +1,9 @@
 import React from 'react';
+import { useStore } from '../../store/useStore';
 
 interface LayoutProps {
   children: React.ReactNode;
 }
-
-import { useStore } from '../../store/useStore';
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const sentimentScore = useStore(state => state.sentimentScore);

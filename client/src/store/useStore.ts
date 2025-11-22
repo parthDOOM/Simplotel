@@ -9,6 +9,7 @@ interface VoiceBotStore {
   sentimentScore: number;
   analytics: Analytics | null;
   showWelcome: boolean;
+  language: string;
   
   setSessionId: (id: string) => void;
   addMessage: (message: Message) => void;
@@ -19,6 +20,7 @@ interface VoiceBotStore {
   setSentimentScore: (score: number) => void;
   setAnalytics: (analytics: Analytics) => void;
   setShowWelcome: (show: boolean) => void;
+  setLanguage: (language: string) => void;
 }
 
 export const useStore = create<VoiceBotStore>((set) => ({
@@ -29,6 +31,7 @@ export const useStore = create<VoiceBotStore>((set) => ({
   sentimentScore: 0,
   analytics: null,
   showWelcome: true,
+  language: 'en-US',
   
   setSessionId: (id) => set({ sessionId: id }),
   addMessage: (message) => set((state) => ({ messages: [...state.messages, message] })),
@@ -42,5 +45,6 @@ export const useStore = create<VoiceBotStore>((set) => ({
   setCurrentTranscript: (currentTranscript) => set({ currentTranscript }),
   setSentimentScore: (sentimentScore) => set({ sentimentScore }),
   setAnalytics: (analytics) => set({ analytics }),
-  setShowWelcome: (showWelcome) => set({ showWelcome })
+  setShowWelcome: (showWelcome) => set({ showWelcome }),
+  setLanguage: (language) => set({ language })
 }));
