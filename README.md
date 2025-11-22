@@ -2,7 +2,6 @@
 
 > A sophisticated voice-first conversational interface AI-powered responses.
 
-![Status](https://img.shields.io/badge/status-production%20ready-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 ## Screenshots
