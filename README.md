@@ -31,7 +31,7 @@
 - **Natural Speech Output** - Text-to-speech synthesis with language-specific voices
 - **Multi-Language Support** - English, Hindi, Gujarati, Spanish, French, German
 - **Barge-in Capability** - Interrupt the bot while it's speaking naturally
-- **Sentiment Analysis** - Real-time emotion detection with VADER
+- **Sentiment Analysis** - Real-time emotion detection with Groq
 - **Analytics Dashboard** - Session metrics, response times, error tracking
 - **PDF Export** - Download conversation transcripts
 - **Dynamic Data Retrieval** - Query session info, user ID, message counts
@@ -93,7 +93,7 @@ NODE_ENV=development
 - **Runtime:** Node.js 18+ with Express 4.18
 - **Database:** MongoDB with Mongoose 8.0
 - **AI:** Groq SDK (Llama 3.3 70B Versatile)
-- **Sentiment:** VADER Sentiment
+- **Sentiment:** Groq Sentiment
 - **Validation:** Zod
 - **Security:** express-rate-limit, CORS
 
@@ -154,7 +154,7 @@ The application supports 6 languages. Users select their preferred language on t
 - Natural, coherent multi-turn dialogues
 
 ### Sentiment-Reactive UI
-- Real-time VADER sentiment analysis (-1.0 to +1.0)
+- Real-time Groq sentiment analysis (-1.0 to +1.0)
 - Background color shifts based on user mood
 - Blue tint for positive, amber for negative
 
